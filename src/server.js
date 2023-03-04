@@ -4,22 +4,14 @@ const cors = require('cors');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const path = require('path');
 const { Server } = require("socket.io");
-const io = new Server(server, {
-    cors: {
-        origin: 'https://radio-music.vercel.app',
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
-});
-
-app.use(cors({
-    origin: 'https://radio-music.vercel.app',
-    credentials: true
-}));
+const io = new Server(server);
+app.use(cors());
+app.use(express.static(path.join(__dirname,"..",'public')));
 
 app.get('/', (req, res) => {
-    res.send('hola mundo');
+    res.sendFile(path.join(__dirname,"..","public","index.html"));
 });
 
 io.on('connection', (socket) => {

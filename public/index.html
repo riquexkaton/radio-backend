@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="container">
+        <audio class='main-audio' src="https://source:gflZj5I7@link.zeno.fm:80/djpmy6sim0etv/" type="audio/mpeg"></audio>
+        <audio class="frase-audio" src="./audios/sonido-radio.mp3"></audio>
+        <div class="container-balls">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
+        <div class="glass"></div>
+        <div class="container-content">
+            <span class="material-symbols-outlined menu-open">menu_open</span>
+            <div class="logo">
+                RiquexFM
+            </div>
+            <div class="description">
+                !Lo tuyo no suena como esta mierda... mmgvo👻!
+            </div>
+        </div>
+        <div class="aside-menu">
+            <span class="material-symbols-outlined close-aside">close</span>
+            <div class="title"><span>Escribe tu peticion 💕</span></div>
+            <div class="message-container"></div>
+            <form class="input-chat">
+                <input type="text" placeholder="escribe tu mensaje">
+                <button type="submit">
+                    <span class="material-symbols-outlined">
+                        send
+                    </span>
+                </button>
+            </form>
+        </div>
+        <div class="cursor"></div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+<script>
+    const cursorPointer = document.querySelector('.cursor');
+    const logo = document.querySelector('.logo');
+    const radio = document.querySelector('.main-audio');
+    const fraseAudio = document.querySelector('.frase-audio');
+    const inputMessage = document.querySelector('input');
+    const formMessage = document.querySelector('form');
+    const asideMenu = document.querySelector('.aside-menu');
+    const closeMenuButton = document.querySelector('.aside-menu .close-aside');
+    const openMenuButton = document.querySelector('.container .container-content .menu-open');
+    const sendMessage = document.querySelector('.aside-menu .input-chat button');
+    const messageContainer = document.querySelector('.aside-menu .message-container');
+
+
+    const socket = io();
+
+    formMessage.onsubmit = (e) => {
+        e.preventDefault();
+        const messageValue = inputMessage.value;
+        if (messageValue == '') return null;
+
+        const templateMessage = `<div class="item">
+                    <p>${messageValue}</p>
+                </div>`;
+
+        messageContainer.innerHTML += templateMessage;
+        socket.emit('message', messageValue);
+        inputMessage.value = '';
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+
+    socket.on('message', function (msg) {
+        const templateMessage = `<div class="item">
+                    <p>${msg}</p>
+                </div>`;
+
+        messageContainer.innerHTML += templateMessage;
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    });
+
+    closeMenuButton.onclick = () => {
+        asideMenu.animate({
+            opacity: 0,
+            pointerEvents: 'none'
+        }, { duration: 200, fill: "forwards" })
+    }
+
+    openMenuButton.onclick = () => {
+        asideMenu.animate({
+            opacity: 1,
+            pointerEvents: 'visible'
+        }, { duration: 200, fill: "forwards" })
+    }
+
+    const changeIcon = (paused, customIcon) => {
+        cursorPointer.textContent = `${customIcon ? customIcon : paused ? '🎶' : '❌'}`;
+        cursorPointer.classList.add('cursor-play');
+    }
+
+    window.onmousemove = (e) => {
+        const { clientX, clientY } = e;
+        cursorPointer.style.top = `${clientY}px`;
+        cursorPointer.style.left = `${clientX}px`;
+    }
+
+    logo.onclick = () => {
+        if (radio.paused) {
+            radio.play();
+            changeIcon(radio.paused);
+        }
+        else {
+            radio.pause();
+            changeIcon(radio.paused);
+        }
+    }
+
+    logo.addEventListener('touchstart,touchend', () => {
+        if (radio.paused) {
+            radio.play();
+            changeIcon(radio.paused);
+        }
+        else {
+            radio.pause();
+            changeIcon(radio.paused);
+        }
+    });
+
+    logo.onmouseover = () => {
+        if (radio.paused) {
+            changeIcon(radio.paused)
+        }
+        else {
+            changeIcon(radio.paused)
+        }
+    }
+
+    logo.onmouseleave = () => {
+        cursorPointer.textContent = '';
+        cursorPointer.classList.remove('cursor-play');
+    }
+
+    openMenuButton.onmouseover = () => {
+        changeIcon(radio.paused, '👀')
+    }
+
+    openMenuButton.onmouseleave = () => {
+        cursorPointer.textContent = '';
+        cursorPointer.classList.remove('cursor-play');
+    }
+
+    inputMessage.onmouseover = () => {
+        cursorPointer.animate({ backgroundColor: '#111' }, { duration: 120, fill: "forwards" })
+    }
+
+    inputMessage.onmouseleave = () => {
+        cursorPointer.animate({ backgroundColor: 'white' }, { duration: 120, fill: "forwards" })
+    }
+    //reproducir frase audio
+    radio.addEventListener('timeupdate', function () {
+        setInterval(() => {
+            fraseAudio.play();
+        }, 300000);
+    });
+
+
+
+</script>
+
+</html>
