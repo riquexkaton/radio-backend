@@ -7,11 +7,11 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
-        credentials: true
+      origin: 'https://radio-music.vercel.app',
+      methods: ['GET', 'POST'],
+      credentials: true
     }
-});
+  });
 
 app.use(cors())
 app.use((req, res, next) => {
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
   });
-  
+
 app.get('/', (req, res) => {
     res.send('hola mundo');
 });
