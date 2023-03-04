@@ -10,24 +10,24 @@ const io = new Server(server, {
         methods: ['GET', 'POST'],
         credentials: true  // permitir solicitudes con credenciales
     }
-  });
+});
 
 app.use(cors())
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
 
 
-  //envio y recibo de mensajes
-  socket.on('message', (data)=>{
-    socket.broadcast.emit('message',data);
-  });
+    //envio y recibo de mensajes
+    socket.on('message', (data) => {
+        socket.broadcast.emit('message', data);
+    });
 
 
 });
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(process.env.PORT || 4000, () => {
+    console.log('listening on ' + process.env.PORT);
 });
