@@ -7,20 +7,16 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-      origin: 'https://radio-music.vercel.app',
-      methods: ['GET', 'POST'],
-      credentials: true
+        origin: 'https://radio-music.vercel.app',
+        methods: ['GET', 'POST'],
+        credentials: true
     }
-  });
+});
 
-app.use(cors())
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://radio-music.vercel.app');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-  });
+app.use(cors({
+    origin: 'https://radio-music.vercel.app',
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send('hola mundo');
