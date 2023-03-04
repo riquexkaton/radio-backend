@@ -7,7 +7,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-        origin: 'https://radio-music.vercel.app', //aqui va el dominio del front
+        origin: 'https://radio-music.vercel.app/', //aqui va el dominio del front
         methods: ['GET', 'POST'],
         credentials: true  // permitir solicitudes con credenciales
     }
