@@ -13,7 +13,10 @@ const io = new Server(server, {
     }
 });
 
-app.use(cors())
+app.use(cors({
+    origin: 'https://radio-music.vercel.app',
+    credentials: true
+}));
 app.get('/', (req, res) => {
     res.send('hola mundo');
 });
